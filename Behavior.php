@@ -109,7 +109,6 @@ class Behavior extends \yii\base\Behavior
                     $this->deleteFiles($attr);
                 }
                 $fileName = uniqid() . '.' . $file->extension;
-                $image = new Image();
                 if ($this->needCrop($attr)) {
                     $coords = $this->getCoords($attr);
                     if ($coords == false) {
@@ -128,33 +127,11 @@ class Behavior extends \yii\base\Behavior
                         $width = $coords['w'];
                         $height = $coords['h'];
                     }
-                    $image->crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
+                    Image::getImagine()->crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
                         ->resize(new Box($width, $height))
                         ->save($this->getSavePath($attr) . '/' . $fileName);
                 } else {
-                    list($imageWidth, $imageHeight) = getimagesize($file->tempName);
-                    $image = $image->getImagine()->open($file->tempName);
-                    if (isset($options['width']) && !isset($options['height'])) {
-                        $width = $options['width'];
-                        $height = $options['width'] * $imageHeight / $imageWidth;
-                        $image->resize(new Box($width, $height));
-                    } elseif (!isset($options['width']) && isset($options['height'])) {
-                        $width = $options['height'] * $imageWidth / $imageHeight;
-                        $height = $options['height'];
-                        $image->resize(new Box($width, $height));
-                    } elseif (isset($options['width']) && isset($options['height'])) {
-                        $width = $options['width'];
-                        $height = $options['height'];
-                        if ($width / $height > $imageWidth / $imageHeight) {
-                            $resizeHeight = $width * $imageHeight / $imageWidth;
-                            $image->resize(new Box($width, $resizeHeight))
-                                ->crop(new Point(0, ($resizeHeight - $height) / 2), new Box($width, $height));
-                        } else {
-                            $resizeWidth = $height * $imageWidth / $imageHeight;
-                            $image->resize(new Box($resizeWidth, $height))
-                                ->crop(new Point(($resizeWidth - $width) / 2, 0), new Box($width, $height));
-                        }
-                    }
+                    $image = $this->processImage($file->tempName, $options);
                     $image->save($this->getSavePath($attr) . '/' . $fileName);
                 }
                 $model->{$attr} = $fileName;
@@ -163,19 +140,41 @@ class Behavior extends \yii\base\Behavior
                     $thumbnails = $this->attributes[$attr]['thumbnails'];
                     foreach ($thumbnails as $name => $options) {
                         $tmbFileName = $name . '_' . $fileName;
-//                        EWideImage::load($file->tempName)
-//                            ->resize($this->miniWidth, $this->miniHeight, 'outside')
-//                            ->crop(
-//                                'center',
-//                                'middle',
-//                                ($this->miniWidth == null ? '100%' : $this->miniWidth),
-//                                ($this->miniHeight == null ? '100%' : $this->miniHeight)
-//                            )
-//                            ->saveToFile($this->getSavePath() . $fileName);
+                        $image = $this->processImage($this->getSavePath($attr) . '/' . $fileName, $options);
+                        $image->save($this->getSavePath($attr) . '/' . $tmbFileName);
                     }
                 }
             }
         }
+    }
+
+    private function processImage($original, $options)
+    {
+        list($imageWidth, $imageHeight) = getimagesize($original);
+        $image = Image::getImagine()->open($original);
+        if (isset($options['width']) && !isset($options['height'])) {
+            $width = $options['width'];
+            $height = $options['width'] * $imageHeight / $imageWidth;
+            $image->resize(new Box($width, $height));
+        } elseif (!isset($options['width']) && isset($options['height'])) {
+            $width = $options['height'] * $imageWidth / $imageHeight;
+            $height = $options['height'];
+            $image->resize(new Box($width, $height));
+        } elseif (isset($options['width']) && isset($options['height'])) {
+            $width = $options['width'];
+            $height = $options['height'];
+            if ($width / $height > $imageWidth / $imageHeight) {
+                $resizeHeight = $width * $imageHeight / $imageWidth;
+                $image->resize(new Box($width, $resizeHeight))
+                    ->crop(new Point(0, ($resizeHeight - $height) / 2), new Box($width, $height));
+            } else {
+                $resizeWidth = $height * $imageWidth / $imageHeight;
+                $image->resize(new Box($resizeWidth, $height))
+                    ->crop(new Point(($resizeWidth - $width) / 2, 0), new Box($width, $height));
+            }
+        }
+
+        return $image;
     }
 
     public function needCrop($attr)
