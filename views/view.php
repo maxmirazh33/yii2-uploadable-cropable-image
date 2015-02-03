@@ -20,7 +20,7 @@ use yii\helpers\Json;
 <?php if ($crop): ?>
     <?php Modal::begin([
         'id' => $selector . '-modal',
-        'closeButton' => ['onclick' => 'descroyJcrop("' . $selector . '-image");', 'id' => $selector . '-image-close'],
+        'closeButton' => ['onclick' => 'destroyJcrop("' . $selector . '-image");', 'id' => $selector . '-image-close'],
         'header' => '<h2>' . Yii::t('maxmirazh33/image', 'Crop image') . '</h2>',
         'footer' => Button::widget(['label' => 'ОК',
             'options' => [
@@ -36,25 +36,24 @@ use yii\helpers\Json;
 <?php endif; ?>
 
 <div id="<?= $selector ?>" class="form-group uploader">
-    <?= Html::activeLabel($model, $attribute) ?>
     <div class="btn btn-default fullinput">
         <div class="uploader-browse" onclick='$("#<?= $selector ?>-input").click(); return false;'>
             <span class="glyphicon glyphicon-picture"></span>
-                <span class="browse-text" id="test-text1">
-                    <?= Yii::t('maxmirazh33\image', 'Select') ?>
+                <span class="browse-text" id="<?= $selector ?>-name">
+                    <?= Yii::t('maxmirazh33/image', 'Select') ?>
                 </span>
             <?= Html::activeFileInput(
                 $model,
                 $attribute,
-                ['id' => $selector . '-input', 'onchange' => 'readFile(this, ' . $selector . ', ' . Json::encode($jcropSettings) . ', ' . $crop . ')']
+                ['id' => $selector . '-input', 'onchange' => 'readFile(this, "' . $selector . '", ' . (int)$crop . ', ' . Json::encode($jcropSettings) . ')']
             ) ?>
         </div>
     </div>
     <?= Html::activeHiddenInput($model, $attribute) ?>
     <?php if ($crop): ?>
         <?= Html::activeHiddenInput($model, 'image[x]') ?>
-        <?= Html::activeHiddenInput($model, 'image[x2]') ?>
+        <?= Html::activeHiddenInput($model, 'image[w]') ?>
         <?= Html::activeHiddenInput($model, 'image[y]') ?>
-        <?= Html::activeHiddenInput($model, 'image[y2]') ?>
+        <?= Html::activeHiddenInput($model, 'image[h]') ?>
     <?php endif; ?>
 </div>

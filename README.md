@@ -28,9 +28,5 @@ Usage
 Once the extension is installed, simply use it in your code by  :
 
 ```php
-echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget', [
-     'crop' => true,
-     'width' => 600,
-     'height' => 300,
-]);
+echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget']);
 ```

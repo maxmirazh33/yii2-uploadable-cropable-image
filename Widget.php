@@ -5,6 +5,7 @@ namespace maxmirazh33\image;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 use Yii;
 
@@ -14,36 +15,17 @@ use Yii;
  * Usage:
  * ```
  * ...
- * echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget', [
- *     'crop' => true,
- *     'width' => 600,
- *     'height' => 300,
- * ]);
+ * echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget');
  * ...
  * ```
  */
 class Widget extends InputWidget
 {
-    /**
-     * @var boolean enable/disable crop
-     */
-    public $crop = true;
-
-    /**
-     * @var integer image width
-     */
-    public $width;
-
-    /**
-     * @var integer image height
-     */
-    public $height;
-
+    private $crop = false;
     /**
      * @var array JCrop settings
      */
     public $jcropSettings = [];
-
     /**
      * @var array default JCrop settings
      */
@@ -54,7 +36,6 @@ class Widget extends InputWidget
         'setSelect' => [0, 0, 9999, 9999],
         'boxWidth' => 568,
         'boxHeight' => 400,
-        'onSelect' => 'setCoords',
     ];
 
     /**
@@ -68,13 +49,26 @@ class Widget extends InputWidget
         parent::init();
 
         $this->registerTranslations();
+        Asset::register($this->getView());
 
-        if ($this->crop) {
-            CropAsset::register($this->getView());
-            $this->jcropSettings = ArrayHelper::merge($this->jcropSettings, $this->jcropDefaultSettings);
-            if (isset($this->width) && isset($this->height)) {
-                $this->jcropSettings['aspectRatio'] = $this->width / $this->height;
+        foreach ($this->model->behaviors as $b) {
+            if ($b instanceof Behavior) {
+                foreach ($b->attributes as $attr => $options) {
+                    if ($attr == $this->attribute) {
+                        if ($b->needCrop($attr)) {
+                            $this->crop = true;
+                            CropAsset::register($this->getView());
+                            $this->jcropSettings = ArrayHelper::merge($this->jcropSettings, $this->jcropDefaultSettings);
+                            $this->jcropSettings['onSelect'] = new JsExpression('function (c) { setCoords("' . $this->getSelector() . '", c) }');
+                            if (isset($options['width'], $options['height'])) {
+                                $this->jcropSettings['aspectRatio'] = $options['width'] / $options['height'];
+                            }
+                        }
+                        break;
+                    }
+                }
             }
+            break;
         }
     }
 
@@ -118,6 +112,6 @@ class Widget extends InputWidget
      */
     public function getSelector()
     {
-        return get_called_class($this->model) . '-' . $this->attribute;
+        return mb_strtolower(basename(str_replace('\\', '/', get_class($this->model)))) . '-' . $this->attribute;
     }
 }

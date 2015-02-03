@@ -5,9 +5,9 @@ namespace maxmirazh33\image;
 use yii\web\AssetBundle;
 
 /**
- * Crop asset bundle.
+ * Widget asset bundle.
  */
-class CropAsset extends AssetBundle
+class Asset extends AssetBundle
 {
     /**
      * @inheritdoc
@@ -17,22 +17,15 @@ class CropAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $css = [
-        'jcrop/css/jquery.Jcrop.min.css',
-    ];
-
-    /**
-     * @inheritdoc
-     */
     public $js = [
-        'jcrop/js/jquery.Jcrop.min.js',
-        'js/jcrop.js',
+        'js/readFile.js',
     ];
 
     /**
      * @inheritdoc
      */
     public $depends = [
-        'maxmirazh33\image\Asset',
+        'yii\bootstrap\BootstrapAsset',
+        'yii\web\JqueryAsset',
     ];
 }
