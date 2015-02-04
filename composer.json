@@ -11,9 +11,9 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*",
-        "yiisoft/yii2-imagine": "*",
-        "yiisoft/yii2-bootstrap": "*"
+        "yiisoft/yii2": "2.*",
+        "yiisoft/yii2-imagine": "2.*",
+        "yiisoft/yii2-bootstrap": "2.*"
     },
     "autoload": {
         "psr-4": {
