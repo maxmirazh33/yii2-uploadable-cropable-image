@@ -14,6 +14,36 @@ use yii\validators\Validator;
 use yii\web\UploadedFile;
 use Yii;
 
+/**
+ * Class model behavior for uploadable and cropable image
+ *
+ * Usage in yout model:
+ * ```
+ * ...
+ * public function behaviors()
+ * {
+ *     return [
+ *         'uploadBehavior' => [
+ *              'class' => \maxmirazh33\image\Behavior::className(),
+ *              'attributes' => [
+ *                  'image' => [
+ *                      'width' => 600,
+ *                      'height' => 300,
+ *                      'crop' => true,
+ *                      'thumbnails' => [
+ *                           'mini' => [
+ *                               'width' => 100,
+ *                          ],
+ *                      ],
+ *                  ],
+ *              ],
+ *         ],
+ *     //other behaviors
+ *     ];
+ * }
+ * ...
+ * ```
+ */
 class Behavior extends \yii\base\Behavior
 {
     /**
