@@ -27,6 +27,32 @@ Usage
 
 Once the extension is installed, simply use it in your code by  :
 
+In your model:
 ```php
-echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget']);
+public function behaviors()
+    {
+        return [
+            'uploadBehavior' => [
+                'class' => \maxmirazh33\image\Behavior::className(),
+                'attributes' => [
+                    'image' => [
+                        'width' => 600,
+                        'height' => 300,
+                        'crop' => true,
+                        'thumbnails' => [
+                            'mini' => [
+                                'width' => 100,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            //other behaviors
+        ];
+    }
+```
+
+In your view file:
+```php
+echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget');
 ```
