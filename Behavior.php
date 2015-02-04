@@ -2,15 +2,12 @@
 namespace maxmirazh33\image;
 
 use Imagine\Image\Box;
-use Imagine\Image\ManipulatorInterface;
 use Imagine\Image\Point;
 use yii\base\InvalidCallException;
 use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
-use yii\helpers\Html;
 use yii\imagine\Image;
 use yii\validators\ImageValidator;
-use yii\validators\Validator;
 use yii\web\UploadedFile;
 use Yii;
 
@@ -118,7 +115,7 @@ class Behavior extends \yii\base\Behavior
             $attrAllowEmpty = isset($options['allowEmpty']) ? $options['allowEmpty'] : null;
             $attrAllowEmptyScenarios = isset($options['allowEmptyScenarios']) ? $options['allowEmptyScenarios'] : null;
             if (isset($attrAllowEmpty) && isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = $attrAllowEmpty || in_array($owner->scenario, $attrAllowEmptyScenarios);
+                $validator->skipOnEmpty = $attrAllowEmpty || in_array($model->scenario, $attrAllowEmptyScenarios);
             } elseif (isset($attrAllowEmpty)) {
                 $validator->skipOnEmpty = $attrAllowEmpty;
             } elseif (isset($attrAllowEmptyScenarios)) {
@@ -136,6 +133,9 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeSave($event)
     {
+        /**
+         * @var ActiveRecord
+         */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
             if ($file = UploadedFile::getInstance($model, $attr)) {
@@ -146,7 +146,7 @@ class Behavior extends \yii\base\Behavior
                 $fileName = uniqid() . '.' . $file->extension;
                 if ($this->needCrop($attr)) {
                     $coords = $this->getCoords($attr);
-                    if ($coords == false) {
+                    if ($coords === false) {
                         throw new InvalidCallException();
                     }
                     if (isset($options['width']) && !isset($options['height'])) {
@@ -162,7 +162,7 @@ class Behavior extends \yii\base\Behavior
                         $width = $coords['w'];
                         $height = $coords['h'];
                     }
-                    Image::getImagine()->crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
+                    Image::crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
                         ->resize(new Box($width, $height))
                         ->save($this->getSavePath($attr) . '/' . $fileName);
                 } else {
@@ -181,6 +181,17 @@ class Behavior extends \yii\base\Behavior
                 }
             }
         }
+    }
+
+    /**
+     * @param $object
+     * @return string
+     */
+    private function getShortClassName($object)
+    {
+        $object = new \ReflectionClass($object);
+        $a = $object->getShortName();
+        return mb_strtolower($object->getShortName());
     }
 
     /**
@@ -309,11 +320,9 @@ class Behavior extends \yii\base\Behavior
         }
 
         if (isset(Yii::$aliases['@frontend'])) {
-            return Yii::getAlias('@frontend/web/images/' . mb_strtolower(basename(str_replace('\\', '/',
-                    get_class($this->owner)))));
+            return Yii::getAlias('@frontend/web/images/' . $this->getShortClassName($this->owner));
         } else {
-            return Yii::getAlias('@app/web/images/' . mb_strtolower(basename(str_replace('\\', '/',
-                    get_class($this->owner)))));
+            return Yii::getAlias('@app/web/images/' . $this->getShortClassName($this->owner));
         }
     }
 
@@ -324,18 +333,18 @@ class Behavior extends \yii\base\Behavior
      */
     private function getUrlPrefix($attr, $tmb = false)
     {
-       if ($tmb !== false) {
-           if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
-               return $this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'];
-           }
-       }
+        if ($tmb !== false) {
+            if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
+                return $this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'];
+            }
+        }
 
         if (isset($this->attributes[$attr]['urlPrefix'])) {
             return $this->attributes[$attr]['urlPrefix'];
         } elseif (isset($this->urlPrefix)) {
             return $this->urlPrefix;
         } else {
-            return '/images/' . mb_strtolower(basename(str_replace('\\', '/', get_class($this->owner)))) . '/';
+            return '/images/' . $this->getShortClassName($this->owner) . '/';
         }
     }
 

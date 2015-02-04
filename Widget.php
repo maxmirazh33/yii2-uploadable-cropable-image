@@ -58,7 +58,8 @@ class Widget extends InputWidget
                         if ($b->needCrop($attr)) {
                             $this->crop = true;
                             CropAsset::register($this->getView());
-                            $this->jcropSettings = ArrayHelper::merge($this->jcropSettings, $this->jcropDefaultSettings);
+                            $this->jcropSettings = ArrayHelper::merge($this->jcropSettings,
+                                $this->jcropDefaultSettings);
                             $this->jcropSettings['onSelect'] = new JsExpression('function (c) { setCoords("' . $this->getSelector() . '", c) }');
                             if (isset($options['width'], $options['height'])) {
                                 $this->jcropSettings['aspectRatio'] = $options['width'] / $options['height'];
@@ -112,6 +113,7 @@ class Widget extends InputWidget
      */
     public function getSelector()
     {
-        return mb_strtolower(basename(str_replace('\\', '/', get_class($this->model)))) . '-' . $this->attribute;
+        $object = new \ReflectionClass($this->model);
+        return mb_strtolower($object->getShortName()) . '-' . $this->attribute;
     }
 }
