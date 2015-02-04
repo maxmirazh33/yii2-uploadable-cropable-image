@@ -104,7 +104,7 @@ class Behavior extends \yii\base\Behavior
     public function beforeValidate($event)
     {
         /**
-         * @var ActiveRecord
+         * @var ActiveRecord $model
          */
         $model = $this->owner;
         $validator = new ImageValidator();
@@ -119,9 +119,9 @@ class Behavior extends \yii\base\Behavior
             } elseif (isset($attrAllowEmpty)) {
                 $validator->skipOnEmpty = $attrAllowEmpty;
             } elseif (isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = in_array($owner->scenario, $attrAllowEmptyScenarios);
+                $validator->skipOnEmpty = in_array($model->scenario, $attrAllowEmptyScenarios);
             } else {
-                $validator->skipOnEmpty = $this->allowEmpty || in_array($owner->scenario, $this->allowEmptyScenarios);
+                $validator->skipOnEmpty = $this->allowEmpty || in_array($model->scenario, $this->allowEmptyScenarios);
             }
 
             $model->validators[] = $validator;
@@ -134,7 +134,7 @@ class Behavior extends \yii\base\Behavior
     public function beforeSave($event)
     {
         /**
-         * @var ActiveRecord
+         * @var ActiveRecord $model
          */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
@@ -190,7 +190,6 @@ class Behavior extends \yii\base\Behavior
     private function getShortClassName($object)
     {
         $object = new \ReflectionClass($object);
-        $a = $object->getShortName();
         return mb_strtolower($object->getShortName());
     }
 

@@ -1,10 +1,8 @@
 <?php
-
 namespace maxmirazh33\image;
 
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 use Yii;
