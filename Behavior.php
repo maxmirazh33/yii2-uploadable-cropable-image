@@ -17,7 +17,7 @@ use Yii;
 /**
  * Class model behavior for uploadable and cropable image
  *
- * Usage in yout model:
+ * Usage in your model:
  * ```
  * ...
  * public function behaviors()
@@ -88,6 +88,9 @@ class Behavior extends \yii\base\Behavior
      */
     public $urlPrefix;
 
+    /**
+     * @inheritdoc
+     */
     public function events()
     {
         return [
@@ -180,6 +183,11 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $original path to original image
+     * @param array $options with width and height
+     * @return \Imagine\Image\ImageInterface
+     */
     private function processImage($original, $options)
     {
         list($imageWidth, $imageHeight) = getimagesize($original);
@@ -209,11 +217,19 @@ class Behavior extends \yii\base\Behavior
         return $image;
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @return bool nedd crop or not
+     */
     public function needCrop($attr)
     {
         return isset($this->attributes[$attr]['crop']) ? $this->attributes[$attr]['crop'] : $this->crop;
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @return array|bool false if no coords and array if coords exists
+     */
     private function getCoords($attr)
     {
         $post = Yii::$app->request->post($this->owner->formName());
@@ -246,6 +262,11 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @param bool|string $tmb false or name of thumbnail
+     * @return string url to image
+     */
     public function getImageUrl($attr, $tmb = false)
     {
         $this->checkAttrExists($attr);
@@ -257,6 +278,9 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $attr name of attribute
+     */
     private function createDirIfNotExists($attr)
     {
         $dir = $this->getSavePath($attr);
@@ -265,6 +289,11 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @param bool|string $tmb name of thumbnail
+     * @return bool|string save path
+     */
     private function getSavePath($attr, $tmb = false)
     {
         if ($tmb !== false) {
@@ -288,6 +317,11 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @param bool|string $tmb name of thumbnail
+     * @return string url prefix
+     */
     private function getUrlPrefix($attr, $tmb = false)
     {
        if ($tmb !== false) {
@@ -305,6 +339,10 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * Delete images
+     * @param string $attr name of attribute
+     */
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
@@ -322,11 +360,20 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @param string $attr name of attribute
+     * @return bool isset thumbnails or not
+     */
     private function issetThumbnails($attr)
     {
         return isset($this->attributes[$attr]['thumbnails']) && is_array($this->attributes[$attr]['thumbnails']);
     }
 
+    /**
+     * Check, isset attribute or not
+     * @param string $attr name of attribute
+     * @throws InvalidParamException
+     */
     private function checkAttrExists($attr)
     {
         if (!isset($this->attributes[$attr])) {
