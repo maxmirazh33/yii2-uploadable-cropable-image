@@ -29,6 +29,8 @@ class Behavior extends \yii\base\Behavior
      *  $thumbnails - array of thumbnails as $prefix => $options. Options:
      *          $width
      *          $height
+     *          $savePathAlias
+     *          $urlPrefix
      */
     public $attributes = [];
     /**
@@ -61,7 +63,7 @@ class Behavior extends \yii\base\Behavior
         return [
             ActiveRecord::EVENT_BEFORE_INSERT => 'beforeSave',
             ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeSave',
-            //ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
+            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
             ActiveRecord::EVENT_AFTER_VALIDATE => 'beforeValidate',
         ];
     }
@@ -204,6 +206,9 @@ class Behavior extends \yii\base\Behavior
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function beforeDelete($event)
     {
         foreach ($this->attributes as $attr => $options) {
@@ -230,8 +235,14 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
-    private function getSavePath($attr)
+    private function getSavePath($attr, $tmb = false)
     {
+        if ($tmb !== false) {
+            if (isset($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias'])) {
+                return Yii::getAlias($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias']);
+            }
+        }
+
         if (isset($this->attributes[$attr]['savePathAlias'])) {
             return Yii::getAlias($this->attributes[$attr]['savePathAlias']);
         } elseif (isset($this->savePathAlias)) {
@@ -247,8 +258,14 @@ class Behavior extends \yii\base\Behavior
         }
     }
 
-    private function getUrlPrefix($attr)
+    private function getUrlPrefix($attr, $tmb = false)
     {
+       if ($tmb !== false) {
+           if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
+               return $this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'];
+           }
+       }
+
         if (isset($this->attributes[$attr]['urlPrefix'])) {
             return $this->attributes[$attr]['urlPrefix'];
         } elseif (isset($this->urlPrefix)) {
