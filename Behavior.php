@@ -119,7 +119,7 @@ class Behavior extends \yii\base\Behavior
             } elseif (isset($attrAllowEmpty)) {
                 $validator->skipOnEmpty = $attrAllowEmpty;
             } elseif (isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = in_array($owner->sceanrio, $attrAllowEmptyScenarios);
+                $validator->skipOnEmpty = in_array($owner->scenario, $attrAllowEmptyScenarios);
             } else {
                 $validator->skipOnEmpty = $this->allowEmpty || in_array($owner->scenario, $this->allowEmptyScenarios);
             }
