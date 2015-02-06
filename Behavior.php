@@ -44,15 +44,6 @@ use Yii;
  */
 class Behavior extends \yii\base\Behavior
 {
-
-    /**
-     * @var array list of attribute as $attributeName => $options. Options:
-     *  $savePathAlias @see maxmirazh33\file\Behavior $savePathAlias
-     *  $allowEmpty @see maxmirazh33\file\Behavior $allowEmpty
-     *  $allowEmptyScenarios @see maxmirazh33\file\Behavior $allowEmptyScenarios
-     *  $urlPrefix @see maxmirazh33\file\Behavior $urlPrefix
-     *  $validatorOptions @see yii\validators\FileValidator
-     */
     /**
      * @var array list of attribute as $attributeName => $options. Options:
      *  $width @see maxmirazh33\image\Behavior $width
