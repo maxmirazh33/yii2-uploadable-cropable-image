@@ -372,14 +372,24 @@ class Behavior extends \yii\base\Behavior
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        $file = $base . DIRECTORY_SEPARATOR . $this->owner->{$attr};
+        /**
+         * @var ActiveRecord $model
+         */
+        $model = $this->owner;
+        if ($model->isNewRecord) {
+            $value = $model->{$attr};
+        } else {
+            $value = $model->oldAttributes[$attr];
+        }
+        $file = $base . DIRECTORY_SEPARATOR . $value;
+
         if (@is_file($file)) {
             @unlink($file);
         }
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
                 $this->ensureAttributes($name, $options);
-                $file = $base . DIRECTORY_SEPARATOR . $name . '_' . $this->owner->{$attr};
+                $file = $base . DIRECTORY_SEPARATOR . $name . '_' . $value;
                 if (@is_file($file)) {
                     @unlink($file);
                 }
