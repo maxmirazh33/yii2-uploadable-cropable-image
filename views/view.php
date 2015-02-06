@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Image upload view.
  *
