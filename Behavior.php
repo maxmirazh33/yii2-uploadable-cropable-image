@@ -70,11 +70,11 @@ class Behavior extends \yii\base\Behavior
      */
     public $extensions = ['jpg', 'jpeg', 'png', 'gif'];
     /**
-     * @var bool allow dont't attach image for all scenarios
+     * @var bool allow don't attach image for all scenarios
      */
     public $allowEmpty = false;
     /**
-     * @var array scenarios, when allow dont't attach image
+     * @var array scenarios, when allow don't attach image
      */
     public $allowEmptyScenarios = ['update'];
     /**
@@ -95,14 +95,14 @@ class Behavior extends \yii\base\Behavior
             ActiveRecord::EVENT_BEFORE_INSERT => 'beforeSave',
             ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeSave',
             ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
-            ActiveRecord::EVENT_AFTER_VALIDATE => 'beforeValidate',
+            ActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function beforeValidate($event)
+    public function beforeValidate()
     {
         /**
          * @var ActiveRecord $model
@@ -127,13 +127,15 @@ class Behavior extends \yii\base\Behavior
             }
 
             $model->validators[] = $validator;
+
+            $model->{$attr} = UploadedFile::getInstance($model, $attr);
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function beforeSave($event)
+    public function beforeSave()
     {
         /**
          * @var ActiveRecord $model
@@ -167,10 +169,10 @@ class Behavior extends \yii\base\Behavior
                     }
                     Image::crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
                         ->resize(new Box($width, $height))
-                        ->save($this->getSavePath($attr) . '/' . $fileName);
+                        ->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
                 } else {
                     $image = $this->processImage($file->tempName, $options);
-                    $image->save($this->getSavePath($attr) . '/' . $fileName);
+                    $image->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
                 }
                 $model->{$attr} = $fileName;
 
@@ -179,8 +181,8 @@ class Behavior extends \yii\base\Behavior
                     foreach ($thumbnails as $name => $options) {
                         $this->ensureAttributes($name, $options);
                         $tmbFileName = $name . '_' . $fileName;
-                        $image = $this->processImage($this->getSavePath($attr) . '/' . $fileName, $options);
-                        $image->save($this->getSavePath($attr) . '/' . $tmbFileName);
+                        $image = $this->processImage($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName, $options);
+                        $image->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $tmbFileName);
                     }
                 }
             }
@@ -269,7 +271,7 @@ class Behavior extends \yii\base\Behavior
     /**
      * @inheritdoc
      */
-    public function beforeDelete($event)
+    public function beforeDelete()
     {
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
@@ -359,14 +361,14 @@ class Behavior extends \yii\base\Behavior
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        $file = $base . $attr;
+        $file = $base . DIRECTORY_SEPARATOR . $this->owner->{$attr};
         if (@is_file($file)) {
             @unlink($file);
         }
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
                 $this->ensureAttributes($name, $options);
-                $file = $base . $name . '_' . $attr;
+                $file = $base . DIRECTORY_SEPARATOR . $name . '_' . $this->owner->{$attr};
                 if (@is_file($file)) {
                     @unlink($file);
                 }
