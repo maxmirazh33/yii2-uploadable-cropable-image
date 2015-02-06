@@ -44,21 +44,31 @@ use Yii;
  */
 class Behavior extends \yii\base\Behavior
 {
+
     /**
-     * @var array list of attribute as $attributeName => [$options]. Options:
-     *  $width
-     *  $height
-     *  $savePathAlias
-     *  $extensions
-     *  $allowEmpty
-     *  $allowEmptyScenarios
-     *  $crop
-     *  $urlPrefix
+     * @var array list of attribute as $attributeName => $options. Options:
+     *  $savePathAlias @see maxmirazh33\file\Behavior $savePathAlias
+     *  $allowEmpty @see maxmirazh33\file\Behavior $allowEmpty
+     *  $allowEmptyScenarios @see maxmirazh33\file\Behavior $allowEmptyScenarios
+     *  $urlPrefix @see maxmirazh33\file\Behavior $urlPrefix
+     *  $validatorOptions @see yii\validators\FileValidator
+     */
+    /**
+     * @var array list of attribute as $attributeName => $options. Options:
+     *  $width @see maxmirazh33\image\Behavior $width
+     *  $height @see maxmirazh33\image\Behavior $height
+     *  $savePathAlias @see maxmirazh33\image\Behavior $savePathAlias
+     *  $extensions @see maxmirazh33\image\Behavior $extensions
+     *  $allowEmpty @see maxmirazh33\image\Behavior $allowEmpty
+     *  $allowEmptyScenarios @see maxmirazh33\image\Behavior $allowEmptyScenarios
+     *  $crop @see maxmirazh33\image\Behavior $crop
+     *  $urlPrefix @see maxmirazh33\image\Behavior $urlPrefix
+     *  $validatorOptions @see yii\validators\ImageValidator
      *  $thumbnails - array of thumbnails as $prefix => $options. Options:
-     *          $width
-     *          $height
-     *          $savePathAlias
-     *          $urlPrefix
+     *          $width @see maxmirazh33\image\Behavior $width
+     *          $height @see maxmirazh33\image\Behavior $height
+     *          $savePathAlias @see maxmirazh33\image\Behavior $savePathAlias
+     *          $urlPrefix @see maxmirazh33\image\Behavior $urlPrefix
      */
     public $attributes = [];
     /**
@@ -126,9 +136,19 @@ class Behavior extends \yii\base\Behavior
                 $validator->skipOnEmpty = $this->allowEmpty || in_array($model->scenario, $this->allowEmptyScenarios);
             }
 
+            if (isset($options['validatorOptions']) && is_array($options['validatorOptions'])) {
+                foreach ($options['validatorOptions'] as $name => $value) {
+                    if (property_exists('\yii\validators\ImageValidator', $name)) {
+                        $validator->{$name} = $value;
+                    }
+                }
+            }
+
             $model->validators[] = $validator;
 
-            $model->{$attr} = UploadedFile::getInstance($model, $attr);
+            if ($file = UploadedFile::getInstance($model, $attr)) {
+                $model->{$attr} = UploadedFile::getInstance($model, $attr);
+            }
         }
     }
 
