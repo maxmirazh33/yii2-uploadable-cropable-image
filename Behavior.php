@@ -110,6 +110,7 @@ class Behavior extends \yii\base\Behavior
         $validator = new ImageValidator();
 
         foreach ($this->attributes as $attr => $options) {
+            $this->ensureAttributes($attr, $options);
             $validator->attributes = [$attr];
             $validator->extensions = isset($options['extensions']) ? $options['extensions'] : $this->extensions;
             $attrAllowEmpty = isset($options['allowEmpty']) ? $options['allowEmpty'] : null;
@@ -138,6 +139,7 @@ class Behavior extends \yii\base\Behavior
          */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
+            $this->ensureAttributes($attr, $options);
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $this->createDirIfNotExists($attr);
                 if (!$model->isNewRecord) {
@@ -174,6 +176,7 @@ class Behavior extends \yii\base\Behavior
                 if ($this->issetThumbnails($attr)) {
                     $thumbnails = $this->attributes[$attr]['thumbnails'];
                     foreach ($thumbnails as $name => $options) {
+                        $this->ensureAttributes($name, $options);
                         $tmbFileName = $name . '_' . $fileName;
                         $image = $this->processImage($this->getSavePath($attr) . '/' . $fileName, $options);
                         $image->save($this->getSavePath($attr) . '/' . $tmbFileName);
@@ -268,6 +271,7 @@ class Behavior extends \yii\base\Behavior
     public function beforeDelete($event)
     {
         foreach ($this->attributes as $attr => $options) {
+            $this->ensureAttributes($attr, $options);
             $this->deleteFiles($attr);
         }
     }
@@ -360,6 +364,7 @@ class Behavior extends \yii\base\Behavior
         }
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
+                $this->ensureAttributes($name, $options);
                 $file = $base . $name . '_' . $attr;
                 if (@is_file($file)) {
                     @unlink($file);
@@ -379,13 +384,29 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * Check, isset attribute or not
-     * @param string $attr name of attribute
+     * @param string $attribute name of attribute
      * @throws InvalidParamException
      */
-    private function checkAttrExists($attr)
+    private function checkAttrExists($attribute)
     {
-        if (!isset($this->attributes[$attr])) {
-            throw new InvalidParamException();
+        foreach ($this->attributes as $attr => $options) {
+            $this->ensureAttributes($attr, $options);
+            if ($attr == $attribute) {
+                return;
+            }
+        }
+        throw new InvalidParamException();
+    }
+
+    /**
+     * @param $attr
+     * @param $options
+     */
+    public static function ensureAttributes(&$attr, &$options)
+    {
+        if (!is_array($options)) {
+            $attr = $options;
+            $options = [];
         }
     }
 }
