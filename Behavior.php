@@ -196,6 +196,8 @@ class Behavior extends \yii\base\Behavior
                         $image->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $tmbFileName);
                     }
                 }
+            } else {
+                $model->{$attr} = $model->oldAttributes[$attr];
             }
         }
     }
