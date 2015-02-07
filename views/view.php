@@ -34,9 +34,9 @@ use yii\helpers\Json;
     <?php \yii\bootstrap\Modal::end(); ?>
 <?php endif; ?>
 
-<div id="<?= $selector ?>" class="form-group uploader">
+<div id="field-<?= $selector ?>" class="form-group uploader">
     <div class="btn btn-default fullinput">
-        <div class="uploader-browse" onclick='$("#<?= $selector ?>-input").click(); return false;'>
+        <div class="uploader-browse" onclick='$("#<?= $selector ?>").click(); return false;'>
             <span class="glyphicon glyphicon-picture"></span>
                 <span class="browse-text" id="<?= $selector ?>-name">
                     <?= Yii::t('maxmirazh33/image', 'Select') ?>
@@ -44,11 +44,10 @@ use yii\helpers\Json;
             <?= Html::activeFileInput(
                 $model,
                 $attribute,
-                ['id' => $selector . '-input', 'onchange' => 'readFile(this, "' . $selector . '", ' . (int)$crop . ', ' . Json::encode($jcropSettings) . ')']
+                ['id' => $selector, 'onchange' => 'readFile(this, "' . $selector . '", ' . (int)$crop . ', ' . Json::encode($jcropSettings) . ')']
             ) ?>
         </div>
     </div>
-    <?= Html::activeHiddenInput($model, $attribute) ?>
     <?php if ($crop): ?>
         <?= Html::activeHiddenInput($model, 'image[x]') ?>
         <?= Html::activeHiddenInput($model, 'image[w]') ?>
