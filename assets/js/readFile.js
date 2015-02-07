@@ -10,9 +10,9 @@ function readFile(file, selector, crop, options)
                 setTimeout(function () {
                     $("#" + selector + "-image").Jcrop(options);
                 }, 500);
+                $("#" + selector + "-modal").modal("show");
+                $("#" + selector + "-image").attr('src', reader.result);
             }
-            $("#" + selector + "-modal").modal("show");
-            $("#" + selector + "-image").attr('src', reader.result);
         };
         reader.readAsDataURL(file.files[0]);
     }
