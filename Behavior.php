@@ -8,7 +8,6 @@ use yii\base\InvalidCallException;
 use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
 use yii\imagine\Image;
-use yii\validators\ImageValidator;
 use yii\web\UploadedFile;
 use Yii;
 
@@ -21,16 +20,23 @@ use Yii;
  * public function behaviors()
  * {
  *     return [
- *         'uploadBehavior' => [
+ *         [
  *              'class' => \maxmirazh33\image\Behavior::className(),
+ *              'savePathAlias' => '@web/images/',
+ *              'urlPrefix' => '/images/',
+ *              'crop' => true,
  *              'attributes' => [
- *                  'image' => [
- *                      'width' => 600,
- *                      'height' => 300,
- *                      'crop' => true,
+ *                  'avatar' => [
+ *                      'savePathAlias' => '@web/images/avatars/',
+ *                      'urlPrefix' => '/images/avatars/',
+ *                      'width' => 100,
+ *                      'height' => 100,
+ *                  ],
+ *                  'logo' => [
+ *                      'crop' => false,
  *                      'thumbnails' => [
- *                           'mini' => [
- *                               'width' => 100,
+ *                          'mini' => [
+ *                              'width' => 50,
  *                          ],
  *                      ],
  *                  ],
@@ -49,12 +55,8 @@ class Behavior extends \yii\base\Behavior
      *  $width @see maxmirazh33\image\Behavior $width
      *  $height @see maxmirazh33\image\Behavior $height
      *  $savePathAlias @see maxmirazh33\image\Behavior $savePathAlias
-     *  $extensions @see maxmirazh33\image\Behavior $extensions
-     *  $allowEmpty @see maxmirazh33\image\Behavior $allowEmpty
-     *  $allowEmptyScenarios @see maxmirazh33\image\Behavior $allowEmptyScenarios
      *  $crop @see maxmirazh33\image\Behavior $crop
      *  $urlPrefix @see maxmirazh33\image\Behavior $urlPrefix
-     *  $validatorOptions @see yii\validators\ImageValidator
      *  $thumbnails - array of thumbnails as $prefix => $options. Options:
      *          $width @see maxmirazh33\image\Behavior $width
      *          $height @see maxmirazh33\image\Behavior $height
@@ -66,18 +68,6 @@ class Behavior extends \yii\base\Behavior
      * @var string. Default @frontend/web/images/className or @app/web/images/className
      */
     public $savePathAlias;
-    /**
-     * @var array
-     */
-    public $extensions = ['jpg', 'jpeg', 'png', 'gif'];
-    /**
-     * @var bool allow don't attach image for all scenarios
-     */
-    public $allowEmpty = false;
-    /**
-     * @var array scenarios, when allow don't attach image
-     */
-    public $allowEmptyScenarios = ['update'];
     /**
      * @var bool enable/disable crop.
      */
@@ -105,38 +95,10 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
-        /**
-         * @var ActiveRecord $model
-         */
+        /* @var $model ActiveRecord */
         $model = $this->owner;
-        $validator = new ImageValidator();
-
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
-            $validator->attributes = [$attr];
-            $validator->extensions = isset($options['extensions']) ? $options['extensions'] : $this->extensions;
-            $attrAllowEmpty = isset($options['allowEmpty']) ? $options['allowEmpty'] : null;
-            $attrAllowEmptyScenarios = isset($options['allowEmptyScenarios']) ? $options['allowEmptyScenarios'] : null;
-            if (isset($attrAllowEmpty) && isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = $attrAllowEmpty || in_array($model->scenario, $attrAllowEmptyScenarios);
-            } elseif (isset($attrAllowEmpty)) {
-                $validator->skipOnEmpty = $attrAllowEmpty;
-            } elseif (isset($attrAllowEmptyScenarios)) {
-                $validator->skipOnEmpty = in_array($model->scenario, $attrAllowEmptyScenarios);
-            } else {
-                $validator->skipOnEmpty = $this->allowEmpty || in_array($model->scenario, $this->allowEmptyScenarios);
-            }
-
-            if (isset($options['validatorOptions']) && is_array($options['validatorOptions'])) {
-                foreach ($options['validatorOptions'] as $name => $value) {
-                    if (property_exists('\yii\validators\ImageValidator', $name)) {
-                        $validator->{$name} = $value;
-                    }
-                }
-            }
-
-            $model->validators[] = $validator;
-
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $model->{$attr} = $file;
             }
@@ -148,9 +110,7 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeSave()
     {
-        /**
-         * @var ActiveRecord $model
-         */
+        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
             $this->ensureAttributes($attr, $options);
@@ -180,10 +140,10 @@ class Behavior extends \yii\base\Behavior
                     }
                     Image::crop($file->tempName, $coords['w'], $coords['h'], [$coords['x'], $coords['y']])
                         ->resize(new Box($width, $height))
-                        ->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
+                        ->save($this->getSavePath($attr) . $fileName);
                 } else {
                     $image = $this->processImage($file->tempName, $options);
-                    $image->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName);
+                    $image->save($this->getSavePath($attr) . $fileName);
                 }
                 $model->{$attr} = $fileName;
 
@@ -192,8 +152,8 @@ class Behavior extends \yii\base\Behavior
                     foreach ($thumbnails as $name => $options) {
                         $this->ensureAttributes($name, $options);
                         $tmbFileName = $name . '_' . $fileName;
-                        $image = $this->processImage($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $fileName, $options);
-                        $image->save($this->getSavePath($attr) . DIRECTORY_SEPARATOR . $tmbFileName);
+                        $image = $this->processImage($this->getSavePath($attr) . $fileName, $options);
+                        $image->save($this->getSavePath($attr) . $tmbFileName);
                     }
                 }
             } else {
@@ -339,9 +299,9 @@ class Behavior extends \yii\base\Behavior
         }
 
         if (isset(Yii::$aliases['@frontend'])) {
-            return Yii::getAlias('@frontend/web/images/' . $this->getShortClassName($this->owner));
+            return Yii::getAlias('@frontend/web/images/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
         } else {
-            return Yii::getAlias('@app/web/images/' . $this->getShortClassName($this->owner));
+            return Yii::getAlias('@app/web/images/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
         }
     }
 
@@ -374,16 +334,14 @@ class Behavior extends \yii\base\Behavior
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        /**
-         * @var ActiveRecord $model
-         */
+        /* @var $model ActiveRecord */
         $model = $this->owner;
         if ($model->isNewRecord) {
             $value = $model->{$attr};
         } else {
             $value = $model->oldAttributes[$attr];
         }
-        $file = $base . DIRECTORY_SEPARATOR . $value;
+        $file = $base . $value;
 
         if (@is_file($file)) {
             @unlink($file);
@@ -391,7 +349,7 @@ class Behavior extends \yii\base\Behavior
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
                 $this->ensureAttributes($name, $options);
-                $file = $base . DIRECTORY_SEPARATOR . $name . '_' . $value;
+                $file = $base . $name . '_' . $value;
                 if (@is_file($file)) {
                     @unlink($file);
                 }

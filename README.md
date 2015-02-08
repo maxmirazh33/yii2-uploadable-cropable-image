@@ -39,29 +39,35 @@ Once the extension is installed, simply use it in your code by  :
 In your model:
 ```php
 public function behaviors()
-    {
-        return [
-            'uploadBehavior' => [
-                'class' => \maxmirazh33\image\Behavior::className(),
-                'attributes' => [
-                    'image' => [
-                        'width' => 600,
-                        'height' => 300,
-                        'crop' => true,
-                        'thumbnails' => [
-                            'mini' => [
-                                'width' => 100,
-                            ],
+{
+    return [
+        [
+            'class' => \maxmirazh33\image\Behavior::className(),
+            'savePathAlias' => '@web/images/',
+            'urlPrefix' => '/images/',
+            'crop' => true,
+            'attributes' => [
+                'avatar' => [
+                    'savePathAlias' => '@web/images/avatars/',
+                    'urlPrefix' => '/images/avatars/',
+                    'width' => 100,
+                    'height' => 100,
+                ],
+                'logo' => [
+                    'crop' => false,
+                    'thumbnails' => [
+                        'mini' => [
+                            'width' => 50,
                         ],
                     ],
                 ],
             ],
-            //other behaviors
-        ];
-    }
+        ],
+    //other behaviors
+    ];
+}
 ```
-
-Don't add rules in your model for used attribute. Validator added automatically.
+Use rules for validate attribute.
 
 In your view file:
 ```php
