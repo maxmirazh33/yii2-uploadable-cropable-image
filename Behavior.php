@@ -225,10 +225,10 @@ class Behavior extends \yii\base\Behavior
         if ($post === null) {
             return false;
         }
-        $x = $post[$attr]['x'];
-        $y = $post[$attr]['y'];
-        $w = $post[$attr]['w'];
-        $h = $post[$attr]['h'];
+        $x = $post[$attr . '-coords']['x'];
+        $y = $post[$attr . '-coords']['y'];
+        $w = $post[$attr . '-coords']['w'];
+        $h = $post[$attr . '-coords']['h'];
         if (!isset($x, $y, $w, $h)) {
             return false;
         }

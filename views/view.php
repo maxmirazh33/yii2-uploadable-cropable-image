@@ -49,9 +49,9 @@ use yii\helpers\Json;
         </div>
     </div>
     <?php if ($crop): ?>
-        <?= Html::activeHiddenInput($model, 'image[x]') ?>
-        <?= Html::activeHiddenInput($model, 'image[w]') ?>
-        <?= Html::activeHiddenInput($model, 'image[y]') ?>
-        <?= Html::activeHiddenInput($model, 'image[h]') ?>
+        <?= Html::hiddenInput($model->formName() . "[$attribute-coords][x]", null, ['id' => "$selector-coords-x"]) ?>
+        <?= Html::hiddenInput($model->formName() . "[$attribute-coords][w]", null, ['id' => "$selector-coords-w"]) ?>
+        <?= Html::hiddenInput($model->formName() . "[$attribute-coords][y]", null, ['id' => "$selector-coords-y"]) ?>
+        <?= Html::hiddenInput($model->formName() . "[$attribute-coords][h]", null, ['id' => "$selector-coords-h"]) ?>
     <?php endif; ?>
 </div>

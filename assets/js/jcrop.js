@@ -7,8 +7,8 @@ function destroyJcrop(selector)
 
 function setCoords(selector, c)
 {
-    $("#" + selector + "-x").val(c.x);
-    $("#" + selector + "-w").val(c.w);
-    $("#" + selector + "-y").val(c.y);
-    $("#" + selector + "-h").val(c.h);
+    $("#" + selector + "-coords-x").val(c.x);
+    $("#" + selector + "-coords-w").val(c.w);
+    $("#" + selector + "-coords-y").val(c.y);
+    $("#" + selector + "-coords-h").val(c.h);
 }
