@@ -2,9 +2,9 @@
 /**
  * Image upload view.
  *
- * @var \yii\web\View $this
+ * @var yii\web\View $this
  * @var string $selector Widget ID selector
- * @var \yii\db\ActiveRecord $model
+ * @var yii\db\ActiveRecord $model
  * @var string $attribute
  * @var boolean $crop enable/disable crop
  * @var array $jcropSettings
