@@ -32,7 +32,7 @@ use yii\helpers\Json;
 
     <img src="" id="<?= $selector ?>-image">
 
-    <?php \yii\bootstrap\Modal::end(); ?>
+    <?php Modal::end(); ?>
 <?php endif; ?>
 
 <div id="field-<?= $selector ?>" class="form-group uploader">

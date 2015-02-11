@@ -2,3 +2,14 @@ checks:
     php:
         code_rating: true
         duplication: true
+tools:
+    php_code_sniffer:
+        config:
+            standard: "PSR2"
+    sensiolabs_security_checker: true
+    php_sim: true
+    php_cs_fixer:
+        config:
+            level: psr2
+    php_mess_detector: true
+    php_analyzer: true
