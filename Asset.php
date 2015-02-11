@@ -1,5 +1,4 @@
 <?php
-
 namespace maxmirazh33\image;
 
 use yii\web\AssetBundle;
@@ -13,14 +12,12 @@ class Asset extends AssetBundle
      * @inheritdoc
      */
     public $sourcePath = '@maxmirazh33/image/assets';
-
     /**
      * @inheritdoc
      */
     public $js = [
         'js/readFile.js',
     ];
-
     /**
      * @inheritdoc
      */

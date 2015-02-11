@@ -2,7 +2,14 @@
     "name": "maxmirazh33/yii2-uploadable-cropable-image",
     "description": "Yii2 extension for upload and crop images",
     "type": "yii2-extension",
-    "keywords": ["yii2", "extension", "jcrop", "image", "image upload", "image crop"],
+    "keywords": [
+        "yii2",
+        "extension",
+        "jcrop",
+        "image",
+        "image upload",
+        "image crop"
+    ],
     "license": "MIT",
     "authors": [
         {

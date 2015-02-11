@@ -1,5 +1,4 @@
 <?php
-
 namespace maxmirazh33\image;
 
 use Imagine\Image\Box;
@@ -51,17 +50,17 @@ use Yii;
 class Behavior extends \yii\base\Behavior
 {
     /**
-     * @var array list of attribute as $attributeName => $options. Options:
-     *  $width @see maxmirazh33\image\Behavior $width
-     *  $height @see maxmirazh33\image\Behavior $height
-     *  $savePathAlias @see maxmirazh33\image\Behavior $savePathAlias
-     *  $crop @see maxmirazh33\image\Behavior $crop
-     *  $urlPrefix @see maxmirazh33\image\Behavior $urlPrefix
-     *  $thumbnails - array of thumbnails as $prefix => $options. Options:
-     *          $width @see maxmirazh33\image\Behavior $width
-     *          $height @see maxmirazh33\image\Behavior $height
-     *          $savePathAlias @see maxmirazh33\image\Behavior $savePathAlias
-     *          $urlPrefix @see maxmirazh33\image\Behavior $urlPrefix
+     * @var array list of attribute as attributeName => options. Options:
+     *  $width @see maxmirazh33\image\Behavior::$width
+     *  $height @see maxmirazh33\image\Behavior::$height
+     *  $savePathAlias @see maxmirazh33\image\Behavior::$savePathAlias
+     *  $crop @see maxmirazh33\image\Behavior::$crop
+     *  $urlPrefix @see maxmirazh33\image\Behavior::$urlPrefix
+     *  $thumbnails - array of thumbnails as prefix => options. Options:
+     *          $width @see maxmirazh33\image\Behavior::$width
+     *          $height @see maxmirazh33\image\Behavior::$height
+     *          $savePathAlias @see maxmirazh33\image\Behavior::$savePathAlias
+     *          $urlPrefix @see maxmirazh33\image\Behavior::$urlPrefix
      */
     public $attributes = [];
     /**
@@ -91,7 +90,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_VALIDATE
      */
     public function beforeValidate()
     {
@@ -106,7 +105,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_INSERT and EVENT_BEFORE_UPDATE
      */
     public function beforeSave()
     {
@@ -242,7 +241,7 @@ class Behavior extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * function for EVENT_BEFORE_DELETE
      */
     public function beforeDelete()
     {

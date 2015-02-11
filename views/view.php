@@ -14,6 +14,7 @@ use yii\bootstrap\Button;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Json;
+
 ?>
 
 <?php if ($crop): ?>

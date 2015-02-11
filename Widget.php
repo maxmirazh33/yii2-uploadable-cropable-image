@@ -1,5 +1,4 @@
 <?php
-
 namespace maxmirazh33\image;
 
 use yii\base\InvalidConfigException;
@@ -20,6 +19,9 @@ use Yii;
  */
 class Widget extends InputWidget
 {
+    /**
+     * @var bool need crop
+     */
     private $crop = false;
     /**
      * @var array JCrop settings
@@ -106,7 +108,6 @@ class Widget extends InputWidget
             ]
         );
     }
-
 
     /**
      * @return string Widget selector
