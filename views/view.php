@@ -22,11 +22,12 @@ use yii\helpers\Json;
         'id' => $selector . '-modal',
         'closeButton' => ['onclick' => 'destroyJcrop("' . $selector . '-image");', 'id' => $selector . '-image-close'],
         'header' => '<h2>' . Yii::t('maxmirazh33/image', 'Crop image') . '</h2>',
-        'footer' => Button::widget(['label' => 'ОК',
+        'footer' => Button::widget([
+            'label' => 'ОК',
             'options' => [
                 'class' => 'btn btn-primary',
                 'onclick' => '$("#' . $selector . '-image-close").click(); return false;'
-            ]
+            ],
         ]),
     ]); ?>
 
@@ -39,9 +40,9 @@ use yii\helpers\Json;
     <div class="btn btn-default fullinput">
         <div class="uploader-browse" onclick='$("#<?= $selector ?>").click(); return false;'>
             <span class="glyphicon glyphicon-picture"></span>
-                <span class="browse-text" id="<?= $selector ?>-name">
-                    <?= Yii::t('maxmirazh33/image', 'Select') ?>
-                </span>
+            <span class="browse-text" id="<?= $selector ?>-name">
+                <?= Yii::t('maxmirazh33/image', 'Select') ?>
+            </span>
             <?= Html::activeFileInput(
                 $model,
                 $attribute,

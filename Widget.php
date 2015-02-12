@@ -61,7 +61,9 @@ class Widget extends InputWidget
                             $this->crop = true;
                             CropAsset::register($this->getView());
                             $this->jcropSettings = ArrayHelper::merge($this->jcropSettings, $this->jcropDefaultSettings);
-                            $this->jcropSettings['onSelect'] = new JsExpression('function (c) { setCoords("' . $this->getSelector() . '", c) }');
+                            $this->jcropSettings['onSelect'] = new JsExpression('function (c) {
+                                setCoords("' . $this->getSelector() . '", c);
+                            }');
                             if (isset($options['width'], $options['height'])) {
                                 $this->jcropSettings['aspectRatio'] = $options['width'] / $options['height'];
                             }
