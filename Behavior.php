@@ -124,7 +124,7 @@ class Behavior extends \yii\base\Behavior
                     if ($coords === false) {
                         throw new InvalidCallException();
                     }
-                    $image = $this->crop($file, $coords);
+                    $image = $this->crop($file, $coords, $options);
                     $image->save($this->getSavePath($attr) . $fileName);
                 } else {
                     $image = $this->processImage($file->tempName, $options);
@@ -151,9 +151,10 @@ class Behavior extends \yii\base\Behavior
      * Crop image
      * @param UploadedFile $file
      * @param array $coords
+     * @param array $options
      * @return \Imagine\Image\ManipulatorInterface
      */
-    private function crop($file, array $coords)
+    private function crop($file, array $coords, array $options)
     {
         if (isset($options['width']) && !isset($options['height'])) {
             $width = $options['width'];
