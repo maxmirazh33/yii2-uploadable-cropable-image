@@ -55,7 +55,7 @@ class Widget extends InputWidget
         foreach ($this->model->behaviors as $b) {
             if ($b instanceof Behavior) {
                 foreach ($b->attributes as $attr => $options) {
-                    Behavior::ensureAttributes($attr, $options);
+                    Behavior::ensureAttribute($attr, $options);
                     if ($attr == $this->attribute) {
                         if ($b->needCrop($attr)) {
                             $this->crop = true;
