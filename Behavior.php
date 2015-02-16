@@ -8,6 +8,7 @@ use yii\base\InvalidParamException;
 use yii\db\ActiveRecord;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
 use Yii;
 
 /**
@@ -286,8 +287,8 @@ class Behavior extends \yii\base\Behavior
     private function createDirIfNotExists($attr)
     {
         $dir = $this->getSavePath($attr);
-        if (!@is_dir($dir)) {
-            @mkdir($dir);
+        if (!is_dir($dir)) {
+            FileHelper::createDirectory($dir);
         }
     }
 
@@ -355,15 +356,15 @@ class Behavior extends \yii\base\Behavior
         }
         $file = $base . $value;
 
-        if (@is_file($file)) {
-            @unlink($file);
+        if (is_file($file)) {
+            unlink($file);
         }
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
                 $this->ensureAttribute($name, $options);
                 $file = $base . $name . '_' . $value;
-                if (@is_file($file)) {
-                    @unlink($file);
+                if (is_file($file)) {
+                    unlink($file);
                 }
             }
         }
