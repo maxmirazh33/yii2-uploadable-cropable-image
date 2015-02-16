@@ -71,5 +71,11 @@ Use rules for validate attribute.
 
 In your view file:
 ```php
-echo $form->field($model, 'image')->widget('maxmirazh33\image\Widget');
+echo $form->field($model, 'avatar')->widget('maxmirazh33\image\Widget');
+```
+
+After, in your view:
+```php
+echo Html::img($model->getImageUrl('avatar'));
+echo Html::img($model->getImageUrl('logo', 'mini'));
 ```
