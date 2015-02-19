@@ -301,21 +301,22 @@ class Behavior extends \yii\base\Behavior
     {
         if ($tmb !== false) {
             if (isset($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias'])) {
-                return Yii::getAlias($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias']);
+                return rtrim(Yii::getAlias($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias']), '\/') . DIRECTORY_SEPARATOR;
             }
         }
 
         if (isset($this->attributes[$attr]['savePathAlias'])) {
-            return Yii::getAlias($this->attributes[$attr]['savePathAlias']);
-        } elseif (isset($this->savePathAlias)) {
-            return Yii::getAlias($this->savePathAlias);
+            return rtrim(Yii::getAlias($this->attributes[$attr]['savePathAlias']), '\/') . DIRECTORY_SEPARATOR;
+        }
+        if (isset($this->savePathAlias)) {
+            return rtrim(Yii::getAlias($this->savePathAlias), '\/') . DIRECTORY_SEPARATOR;
         }
 
         if (isset(Yii::$aliases['@frontend'])) {
             return Yii::getAlias('@frontend/web/images/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
-        } else {
-            return Yii::getAlias('@app/web/images/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
         }
+
+        return Yii::getAlias('@app/web/images/' . $this->getShortClassName($this->owner)) . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -327,17 +328,18 @@ class Behavior extends \yii\base\Behavior
     {
         if ($tmb !== false) {
             if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
-                return $this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'];
+                return '/' . trim($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'], '/') . '/';
             }
         }
 
         if (isset($this->attributes[$attr]['urlPrefix'])) {
-            return $this->attributes[$attr]['urlPrefix'];
-        } elseif (isset($this->urlPrefix)) {
-            return $this->urlPrefix;
-        } else {
-            return '/images/' . $this->getShortClassName($this->owner) . '/';
+            return '/' . trim($this->attributes[$attr]['urlPrefix'], '/') . '/';
         }
+        if (isset($this->urlPrefix)) {
+            return '/' . trim($this->urlPrefix, '/') . '/';
+        }
+
+        return '/images/' . $this->getShortClassName($this->owner) . '/';
     }
 
     /**
