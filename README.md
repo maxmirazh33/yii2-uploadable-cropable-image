@@ -77,5 +77,5 @@ echo $form->field($model, 'avatar')->widget('maxmirazh33\image\Widget');
 After, in your view:
 ```php
 echo Html::img($model->getImageUrl('avatar'));
-echo Html::img($model->getImageUrl('logo', 'mini'));
+echo Html::img($model->getImageUrl('logo', 'mini')); //get url of thumbnail named 'mini' for 'logo' attribute
 ```
