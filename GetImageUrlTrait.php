@@ -10,7 +10,6 @@ trait GetImageUrlTrait
      */
     public function getImageUrl($attr, $tmb = false)
     {
-        $model = $this;
         if (mb_strpos(get_class($this), 'backend') === false) {
             $class = new \ReflectionClass($this);
             $class = 'backend\models\\' . $class->getShortName();
