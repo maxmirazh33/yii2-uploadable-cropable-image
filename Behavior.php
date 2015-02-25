@@ -268,16 +268,20 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param string $attr name of attribute
      * @param bool|string $tmb false or name of thumbnail
+     * @param ActiveRecord $object that keep attrribute. Default $this->owner
      * @return string url to image
      */
-    public function getImageUrl($attr, $tmb = false)
+    public function getImageUrl($attr, $tmb = false, $object = null)
     {
         $this->checkAttrExists($attr);
-        $prefix = $this->getUrlPrefix($attr);
+        $prefix = $this->getUrlPrefix($attr, $tmb, $object);
+
+        $object = isset($object) ? $object : $this->owner;
+
         if ($tmb) {
-            return $prefix . $tmb . '_' . $this->owner->{$attr};
+            return $prefix . $tmb . '_' . $object->{$attr};
         } else {
-            return $prefix . $this->owner->{$attr};
+            return $prefix . $object->{$attr};
         }
     }
 
@@ -322,9 +326,10 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param string $attr name of attribute
      * @param bool|string $tmb name of thumbnail
+     * @param ActiveRecord $object for default prefix
      * @return string url prefix
      */
-    private function getUrlPrefix($attr, $tmb = false)
+    private function getUrlPrefix($attr, $tmb = false, $object = null)
     {
         if ($tmb !== false) {
             if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
@@ -339,7 +344,8 @@ class Behavior extends \yii\base\Behavior
             return '/' . trim($this->urlPrefix, '/') . '/';
         }
 
-        return '/images/' . $this->getShortClassName($this->owner) . '/';
+        $object = isset($object) ? $object : $this->owner;
+        return '/images/' . $this->getShortClassName($object) . '/';
     }
 
     /**
