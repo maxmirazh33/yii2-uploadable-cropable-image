@@ -10,20 +10,20 @@ trait GetImageUrlTrait
      */
     public function getImageUrl($attr, $tmb = false)
     {
-        if (mb_strpos(get_class($this), 'backend') === false) {
-            $class = new \ReflectionClass($this);
-            $class = 'backend\models\\' . $class->getShortName();
-            $model = new $class;
-            foreach ($model->behaviors as $b) {
-                if ($b instanceof Behavior) {
-                    return $b->getImageUrl($attr, $tmb, $this);
-                }
+        foreach ($this->behaviors as $behavior) {
+            if ($behavior instanceof Behavior) {
+                return $behavior->getImageUrl($attr, $tmb);
             }
         }
 
-        foreach ($this->behaviors as $b) {
-            if ($b instanceof Behavior) {
-                return $b->getImageUrl($attr, $tmb);
+        $class = new \ReflectionClass($this);
+        $class = 'backend\models\\' . $class->getShortName();
+        if (class_exists($class)) {
+            $model = new $class;
+            foreach ($model->behaviors as $behavior) {
+                if ($behavior instanceof Behavior) {
+                    return $behavior->getImageUrl($attr, $tmb, $this);
+                }
             }
         }
 
