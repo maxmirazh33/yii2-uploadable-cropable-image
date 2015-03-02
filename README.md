@@ -80,7 +80,7 @@ echo Html::img($model->getImageUrl('avatar'));
 echo Html::img($model->getImageUrl('logo', 'mini')); //get url of thumbnail named 'mini' for 'logo' attribute
 ```
 
-If you use Advanced App Template and this behavior attached in backend model, than in frontend model add trait
+If you use Advanced App Template and this behavior attached in backend model, then in frontend model add trait
 ```php
 use \maxmirazh33\image\GetImageUrlTrait
 ```
