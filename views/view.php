@@ -25,7 +25,7 @@ use yii\helpers\Json;
         'footer' => Button::widget([
             'label' => 'ОК',
             'options' => [
-                'class' => 'btn btn-primary',
+                'class' => 'btn btn-flat btn-primary',
                 'onclick' => '$("#' . $selector . '-image-close").click(); return false;'
             ],
         ]),
