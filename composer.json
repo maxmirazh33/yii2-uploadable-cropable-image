@@ -10,13 +10,19 @@
         "image upload",
         "image crop"
     ],
+    "homepage": "https://github.com/maxmirazh33/yii2-uploadable-cropable-image",
     "license": "MIT",
     "authors": [
         {
             "name": "Maxim Kolokolnikov",
-            "email": "maxmirazh33@gmail.com"
+            "email": "maxmirazh33@gmail.com",
+            "homepage": "http://kolokolnikov.me",
         }
     ],
+    "support": {
+        "issues": "https://github.com/maxmirazh33/yii2-uploadable-cropable-image/issues",
+        "source": "https://github.com/maxmirazh33/yii2-uploadable-cropable-image"
+    },
     "require": {
         "yiisoft/yii2": "2.*",
         "yiisoft/yii2-imagine": "2.*",
@@ -24,7 +30,7 @@
     },
     "autoload": {
         "psr-4": {
-            "maxmirazh33\\image\\": ""
+            "maxmirazh33\\image\\": "src"
         }
     }
 }

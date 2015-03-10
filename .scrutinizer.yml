@@ -6,6 +6,8 @@ tools:
     php_code_sniffer:
         config:
             standard: "PSR2"
+        filter:
+            paths: ['src']
     sensiolabs_security_checker: true
     php_sim: true
     php_cs_fixer:

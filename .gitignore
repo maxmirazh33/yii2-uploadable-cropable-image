@@ -13,7 +13,12 @@ nbproject
 Thumbs.db
 
 # composer vendor dir
-/vendor
+vendor
+# cubrid install dir
+/cubrid
+
+# composer itself is not needed
+composer.phar
 
 # Mac DS_Store Files
 .DS_Store
@@ -22,3 +27,10 @@ Thumbs.db
 phpunit.phar
 # local phpunit config
 /phpunit.xml
+
+build
+composer.lock
+
+# mac deployment helpers
+switch
+index

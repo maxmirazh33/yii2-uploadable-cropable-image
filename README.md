@@ -2,14 +2,11 @@ Yii2 uploadable and cropable image
 ==================================
 Yii2 extension for upload and crop images
 
-[![Latest Stable Version](https://poser.pugx.org/maxmirazh33/yii2-uploadable-cropable-image/v/stable.svg)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
-[![Total Downloads](https://poser.pugx.org/maxmirazh33/yii2-uploadable-cropable-image/downloads.svg)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image/?branch=master)
-[![Code Climate](https://codeclimate.com/github/maxmirazh33/yii2-uploadable-cropable-image/badges/gpa.svg)](https://codeclimate.com/github/maxmirazh33/yii2-uploadable-cropable-image)
-[![Latest Unstable Version](https://poser.pugx.org/maxmirazh33/yii2-uploadable-cropable-image/v/unstable.svg)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
-[![License](https://poser.pugx.org/maxmirazh33/yii2-uploadable-cropable-image/license.svg)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
-[![Dependency Status](https://www.versioneye.com/user/projects/54d1d39f3ca08473b4000156/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54d1d39f3ca08473b4000156)
-[![Build Status](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image/badges/build.png?b=master)](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image/build-status/master)
+[![Latest Version](https://img.shields.io/github/release/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image/releases)
+[![Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/maxmirazh33/yii2-uploadable-cropable-image/master/LICENSE.md)
+[![Quality Score](https://img.shields.io/scrutinizer/g/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image)
+[![Code Climate](https://img.shields.io/codeclimate/github/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://codeclimate.com/github/maxmirazh33/yii2-uploadable-cropable-image)
+[![Total Downloads](https://img.shields.io/packagist/dt/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
 
 Installation
 ------------
