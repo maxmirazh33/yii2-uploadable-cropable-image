@@ -2,7 +2,7 @@
 
 Contributions are **welcome** and will be fully **credited**.
 
-We accept contributions via Pull Requests on [Github](https://github.com/2amigos/:package_name).
+We accept contributions via Pull Requests on [Github](https://github.com/maxmirazh33/yii2-uploadable-cropable-image).
 
 
 ## Pull Requests
