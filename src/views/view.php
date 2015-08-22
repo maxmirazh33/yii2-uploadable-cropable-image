@@ -38,7 +38,7 @@ use yii\helpers\Json;
 
 <div id="field-<?= $selector ?>" class="form-group uploader">
     <div class="btn btn-default fullinput">
-        <div class="uploader-browse" onclick='$("#<?= $selector ?>").click(); return false;'>
+        <div class="uploader-browse">
             <span class="glyphicon glyphicon-picture"></span>
             <span class="browse-text" id="<?= $selector ?>-name">
                 <?= Yii::t('maxmirazh33/image', 'Select') ?>
