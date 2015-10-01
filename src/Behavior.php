@@ -142,7 +142,7 @@ class Behavior extends \yii\base\Behavior
                         $image->save($this->getSavePath($attr) . $tmbFileName);
                     }
                 }
-            } else {
+            } elseif (isset($model->oldAttributes[$attr])) {
                 $model->{$attr} = $model->oldAttributes[$attr];
             }
         }
