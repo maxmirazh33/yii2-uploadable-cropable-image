@@ -71,8 +71,8 @@ class Widget extends InputWidget
                         break;
                     }
                 }
+                break;
             }
-            break;
         }
     }
 
