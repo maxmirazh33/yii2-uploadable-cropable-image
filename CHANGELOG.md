@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-cropable-image` will be documented in this file
 
+## 2.2.2
+- Fix issues #3, #4
+
 ## 2.2.1
 - Fix issue #2
 
