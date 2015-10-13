@@ -60,7 +60,7 @@ class Widget extends InputWidget
                         if ($b->needCrop($attr)) {
                             $this->crop = true;
                             CropAsset::register($this->getView());
-                            $this->jcropSettings = ArrayHelper::merge($this->jcropSettings, $this->jcropDefaultSettings);
+                            $this->jcropSettings = array_merge($this->jcropDefaultSettings, $this->jcropSettings);
                             $this->jcropSettings['onSelect'] = new JsExpression('function (c) {
                                 setCoords("' . $this->getSelector() . '", c);
                             }');
