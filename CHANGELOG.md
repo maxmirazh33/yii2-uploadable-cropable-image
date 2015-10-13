@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-cropable-image` will be documented in this file
 
+## 2.2.3
+- Merged PR #5 ([neizerth](https://github.com/neizerth))
+
 ## 2.2.2
 - Fix issues #3, #4
 
