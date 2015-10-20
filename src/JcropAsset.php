@@ -11,7 +11,7 @@ class JcropAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@vendor/bower-asset/jcrop';
+    public $sourcePath = '@vendor/bower/jcrop';
     /**
      * @inheritdoc
      */
