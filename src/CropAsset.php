@@ -15,20 +15,13 @@ class CropAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $css = [
-        'jcrop/css/jquery.Jcrop.min.css',
-    ];
-    /**
-     * @inheritdoc
-     */
     public $js = [
-        'jcrop/js/jquery.Jcrop.min.js',
         'js/jcrop.js',
     ];
     /**
      * @inheritdoc
      */
     public $depends = [
-        'maxmirazh33\image\Asset',
+        'maxmirazh33\image\JcropAsset',
     ];
 }

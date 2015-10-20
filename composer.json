@@ -16,7 +16,7 @@
         {
             "name": "Maxim Kolokolnikov",
             "email": "maxmirazh33@gmail.com",
-            "homepage": "http://kolokolnikov.me"
+            "homepage": "http://maximkolokolnikov.ru"
         }
     ],
     "support": {
@@ -24,9 +24,10 @@
         "source": "https://github.com/maxmirazh33/yii2-uploadable-cropable-image"
     },
     "require": {
-        "yiisoft/yii2": "2.*",
+        "yiisoft/yii2": "2.0.*",
         "yiisoft/yii2-imagine": "2.*",
-        "yiisoft/yii2-bootstrap": "2.*"
+        "yiisoft/yii2-bootstrap": "2.*",
+        "bower-asset/Jcrop": "0.9.*"
     },
     "autoload": {
         "psr-4": {
