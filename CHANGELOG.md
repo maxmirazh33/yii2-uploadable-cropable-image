@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-cropable-image` will be documented in this file
 
+## 2.2.5
+- Fix jcrop package name for compatibility with composer 2.0
+
 ## 2.2.4
 - Move Jcrop to bower dependency
 
