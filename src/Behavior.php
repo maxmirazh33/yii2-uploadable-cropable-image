@@ -1,10 +1,15 @@
 <?php
+
 namespace maxmirazh33\image;
 
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ManipulatorInterface;
 use Imagine\Image\Point;
+use yii\base\Exception;
+use yii\base\InvalidArgumentException;
 use yii\base\InvalidCallException;
-use yii\base\InvalidParamException;
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\imagine\Image;
 use yii\web\UploadedFile;
@@ -47,6 +52,7 @@ use Yii;
  * }
  * ...
  * ```
+ * @property ActiveRecord $owner
  */
 class Behavior extends \yii\base\Behavior
 {
@@ -54,14 +60,14 @@ class Behavior extends \yii\base\Behavior
      * @var array list of attribute as attributeName => options. Options:
      *  $width image width
      *  $height image height
-     *  $savePathAlias @see maxmirazh33\image\Behavior::$savePathAlias
-     *  $crop @see maxmirazh33\image\Behavior::$crop
-     *  $urlPrefix @see maxmirazh33\image\Behavior::$urlPrefix
+     *  $savePathAlias @see \maxmirazh33\image\Behavior::$savePathAlias
+     *  $crop @see \maxmirazh33\image\Behavior::$crop
+     *  $urlPrefix @see \maxmirazh33\image\Behavior::$urlPrefix
      *  $thumbnails - array of thumbnails as prefix => options. Options:
      *          $width thumbnail width
      *          $height thumbnail height
-     *          $savePathAlias @see maxmirazh33\image\Behavior::$savePathAlias
-     *          $urlPrefix @see maxmirazh33\image\Behavior::$urlPrefix
+     *          $savePathAlias @see \maxmirazh33\image\Behavior::$savePathAlias
+     *          $urlPrefix @see \maxmirazh33\image\Behavior::$urlPrefix
      */
     public $attributes = [];
     /**
@@ -95,10 +101,9 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttribute($attr, $options);
+            self::ensureAttribute($attr, $options);
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $model->{$attr} = $file;
             }
@@ -110,20 +115,19 @@ class Behavior extends \yii\base\Behavior
      */
     public function beforeSave()
     {
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttribute($attr, $options);
+            self::ensureAttribute($attr, $options);
             if ($file = UploadedFile::getInstance($model, $attr)) {
                 $this->createDirIfNotExists($attr);
                 if (!$model->isNewRecord) {
                     $this->deleteFiles($attr);
                 }
-                $fileName = uniqid() . '.' . $file->extension;
+                $fileName = uniqid('', true) . '.' . $file->extension;
                 if ($this->needCrop($attr)) {
                     $coords = $this->getCoords($attr);
                     if ($coords === false) {
-                        throw new InvalidCallException();
+                        throw new InvalidCallException('invalid coords param');
                     }
                     $image = $this->crop($file, $coords, $options);
                     $image->save($this->getSavePath($attr) . $fileName);
@@ -136,7 +140,7 @@ class Behavior extends \yii\base\Behavior
                 if ($this->issetThumbnails($attr)) {
                     $thumbnails = $this->attributes[$attr]['thumbnails'];
                     foreach ($thumbnails as $name => $options) {
-                        $this->ensureAttribute($name, $options);
+                        self::ensureAttribute($name, $options);
                         $tmbFileName = $name . '_' . $fileName;
                         $image = $this->processImage($this->getSavePath($attr) . $fileName, $options);
                         $image->save($this->getSavePath($attr) . $tmbFileName);
@@ -153,7 +157,7 @@ class Behavior extends \yii\base\Behavior
      * @param UploadedFile $file
      * @param array $coords
      * @param array $options
-     * @return \Imagine\Image\ManipulatorInterface
+     * @return ManipulatorInterface
      */
     private function crop($file, array $coords, array $options)
     {
@@ -163,7 +167,7 @@ class Behavior extends \yii\base\Behavior
         } elseif (!isset($options['width']) && isset($options['height'])) {
             $width = $options['height'] * $coords['w'] / $coords['h'];
             $height = $options['height'];
-        } elseif (isset($options['width']) && isset($options['height'])) {
+        } elseif (isset($options['width'], $options['height'])) {
             $width = $options['width'];
             $height = $options['height'];
         } else {
@@ -178,17 +182,18 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param ActiveRecord $object
      * @return string
+     * @throws \ReflectionException
      */
     private function getShortClassName($object)
     {
-        $object = new \ReflectionClass($object);
-        return mb_strtolower($object->getShortName());
+        $obj = new \ReflectionClass($object);
+        return mb_strtolower($obj->getShortName());
     }
 
     /**
      * @param string $original path to original image
      * @param array $options with width and height
-     * @return \Imagine\Image\ImageInterface
+     * @return ImageInterface
      */
     private function processImage($original, $options)
     {
@@ -202,7 +207,7 @@ class Behavior extends \yii\base\Behavior
             $width = $options['height'] * $imageWidth / $imageHeight;
             $height = $options['height'];
             $image->resize(new Box($width, $height));
-        } elseif (isset($options['width']) && isset($options['height'])) {
+        } elseif (isset($options['width'], $options['height'])) {
             $width = $options['width'];
             $height = $options['height'];
             if ($width / $height > $imageWidth / $imageHeight) {
@@ -221,7 +226,7 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
-     * @return bool nedd crop or not
+     * @return bool need crop or not
      */
     public function needCrop($attr)
     {
@@ -231,6 +236,7 @@ class Behavior extends \yii\base\Behavior
     /**
      * @param string $attr name of attribute
      * @return array|bool false if no coords and array if coords exists
+     * @throws InvalidConfigException
      */
     private function getCoords($attr)
     {
@@ -260,7 +266,7 @@ class Behavior extends \yii\base\Behavior
     public function beforeDelete()
     {
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttribute($attr, $options);
+            self::ensureAttribute($attr, $options);
             $this->deleteFiles($attr);
         }
     }
@@ -280,13 +286,14 @@ class Behavior extends \yii\base\Behavior
 
         if ($tmb) {
             return $prefix . $tmb . '_' . $object->{$attr};
-        } else {
-            return $prefix . $object->{$attr};
         }
+
+        return $prefix . $object->{$attr};
     }
 
     /**
      * @param string $attr name of attribute
+     * @throws Exception
      */
     private function createDirIfNotExists($attr)
     {
@@ -300,6 +307,7 @@ class Behavior extends \yii\base\Behavior
      * @param string $attr name of attribute
      * @param bool|string $tmb name of thumbnail
      * @return string save path
+     * @throws \ReflectionException
      */
     private function getSavePath($attr, $tmb = false)
     {
@@ -328,13 +336,12 @@ class Behavior extends \yii\base\Behavior
      * @param bool|string $tmb name of thumbnail
      * @param ActiveRecord $object for default prefix
      * @return string url prefix
+     * @throws \ReflectionException
      */
     private function getUrlPrefix($attr, $tmb = false, $object = null)
     {
-        if ($tmb !== false) {
-            if (isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
-                return '/' . trim($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'], '/') . '/';
-            }
+        if ($tmb !== false && isset($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'])) {
+            return '/' . trim($this->attributes[$attr]['thumbnails'][$tmb]['urlPrefix'], '/') . '/';
         }
 
         if (isset($this->attributes[$attr]['urlPrefix'])) {
@@ -351,11 +358,11 @@ class Behavior extends \yii\base\Behavior
     /**
      * Delete images
      * @param string $attr name of attribute
+     * @throws \ReflectionException
      */
     private function deleteFiles($attr)
     {
         $base = $this->getSavePath($attr);
-        /* @var $model ActiveRecord */
         $model = $this->owner;
         if ($model->isNewRecord) {
             $value = $model->{$attr};
@@ -369,7 +376,7 @@ class Behavior extends \yii\base\Behavior
         }
         if ($this->issetThumbnails($attr)) {
             foreach ($this->attributes[$attr]['thumbnails'] as $name => $options) {
-                $this->ensureAttribute($name, $options);
+                self::ensureAttribute($name, $options);
                 $file = $base . $name . '_' . $value;
                 if (is_file($file)) {
                     unlink($file);
@@ -390,17 +397,17 @@ class Behavior extends \yii\base\Behavior
     /**
      * Check, isset attribute or not
      * @param string $attribute name of attribute
-     * @throws InvalidParamException
+     * @throws InvalidArgumentException
      */
     private function checkAttrExists($attribute)
     {
         foreach ($this->attributes as $attr => $options) {
-            $this->ensureAttribute($attr, $options);
+            self::ensureAttribute($attr, $options);
             if ($attr == $attribute) {
                 return;
             }
         }
-        throw new InvalidParamException();
+        throw new InvalidArgumentException('checkAttrExists failed');
     }
 
     /**

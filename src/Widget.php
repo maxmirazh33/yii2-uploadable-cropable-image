@@ -1,8 +1,8 @@
 <?php
+
 namespace maxmirazh33\image;
 
 use yii\base\InvalidConfigException;
-use yii\helpers\ArrayHelper;
 use yii\web\JsExpression;
 use yii\widgets\InputWidget;
 use Yii;
@@ -112,6 +112,7 @@ class Widget extends InputWidget
 
     /**
      * @return string Widget selector
+     * @throws \ReflectionException
      */
     public function getSelector()
     {

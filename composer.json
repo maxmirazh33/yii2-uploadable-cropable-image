@@ -24,6 +24,7 @@
         "source": "https://github.com/maxmirazh33/yii2-uploadable-cropable-image"
     },
     "require": {
+        "ext-mbstring": "*",
         "yiisoft/yii2": "2.0.*",
         "yiisoft/yii2-imagine": "2.*",
         "yiisoft/yii2-bootstrap": "2.*",

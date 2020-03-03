@@ -14,7 +14,6 @@ use yii\bootstrap\Button;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Json;
-
 ?>
 
 <?php if ($crop): ?>
@@ -31,7 +30,7 @@ use yii\helpers\Json;
         ]),
     ]); ?>
 
-    <img src="" id="<?= $selector ?>-image">
+    <img src="" id="<?= $selector ?>-image" alt="<?= $selector ?>-image">
 
     <?php Modal::end(); ?>
 <?php endif; ?>

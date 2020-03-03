@@ -1,12 +1,17 @@
 <?php
+
 namespace maxmirazh33\image;
 
+/**
+ * @property \yii\base\Behavior[] $behaviors
+ */
 trait GetImageUrlTrait
 {
     /**
      * @param string $attr name of attribute
      * @param bool|string $tmb false or name of thumbnail
      * @return null|string url to image
+     * @throws \ReflectionException
      */
     public function getImageUrl($attr, $tmb = false)
     {
