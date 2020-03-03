@@ -23,10 +23,12 @@ class Widget extends InputWidget
      * @var bool need crop
      */
     private $crop = false;
+
     /**
      * @var array JCrop settings
      */
     public $jcropSettings = [];
+
     /**
      * @var array default JCrop settings
      */

@@ -70,14 +70,17 @@ class Behavior extends \yii\base\Behavior
      *          $urlPrefix @see \maxmirazh33\image\Behavior::$urlPrefix
      */
     public $attributes = [];
+
     /**
      * @var string. Default '@frontend/web/images/%className%/' or '@app/web/images/%className%/'
      */
     public $savePathAlias;
+
     /**
      * @var bool enable/disable crop.
      */
     public $crop = true;
+
     /**
      * @var string part of url for image without hostname. Default '/images/%className%/'
      */
@@ -276,6 +279,7 @@ class Behavior extends \yii\base\Behavior
      * @param bool|string $tmb false or name of thumbnail
      * @param ActiveRecord $object that keep attrribute. Default $this->owner
      * @return string url to image
+     * @throws \ReflectionException
      */
     public function getImageUrl($attr, $tmb = false, $object = null)
     {
@@ -293,7 +297,7 @@ class Behavior extends \yii\base\Behavior
 
     /**
      * @param string $attr name of attribute
-     * @throws Exception
+     * @throws Exception|\ReflectionException
      */
     private function createDirIfNotExists($attr)
     {
@@ -311,10 +315,8 @@ class Behavior extends \yii\base\Behavior
      */
     private function getSavePath($attr, $tmb = false)
     {
-        if ($tmb !== false) {
-            if (isset($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias'])) {
-                return rtrim(Yii::getAlias($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias']), '\/') . DIRECTORY_SEPARATOR;
-            }
+        if (($tmb !== false) && isset($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias'])) {
+            return rtrim(Yii::getAlias($this->attributes[$attr]['thumbnails'][$tmb]['savePathAlias']), '\/') . DIRECTORY_SEPARATOR;
         }
 
         if (isset($this->attributes[$attr]['savePathAlias'])) {
