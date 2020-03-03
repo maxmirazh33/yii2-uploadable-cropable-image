@@ -2,6 +2,9 @@
 
 All Notable changes to `yii2-uploadable-cropable-image` will be documented in this file
 
+## 2.2.6
+- Use asset-packagist instead of global fxp composer plugin
+
 ## 2.2.5
 - Fix jcrop package name for compatibility with composer 2.0
 
