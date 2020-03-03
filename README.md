@@ -5,7 +5,6 @@ Yii2 extension for upload and crop images
 [![Latest Version](https://img.shields.io/github/release/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://github.com/maxmirazh33/yii2-uploadable-cropable-image/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/maxmirazh33/yii2-uploadable-cropable-image/blob/master/LICENSE.md)
 [![Quality Score](https://img.shields.io/scrutinizer/g/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://scrutinizer-ci.com/g/maxmirazh33/yii2-uploadable-cropable-image)
-[![Code Climate](https://img.shields.io/codeclimate/github/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://codeclimate.com/github/maxmirazh33/yii2-uploadable-cropable-image)
 [![Total Downloads](https://img.shields.io/packagist/dt/maxmirazh33/yii2-uploadable-cropable-image.svg?style=flat-square)](https://packagist.org/packages/maxmirazh33/yii2-uploadable-cropable-image)
 
 Installation
